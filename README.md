@@ -5,11 +5,12 @@ This guide covers:
 - Setting up Docusaurus
 - Adding a new React component
 - Enabling localization
+- Deploying the site on GitHub pages
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/) installed on your machine.
-- Basic knowledge of [Git](https://git-scm.com/) and [Yarn](https://yarnpkg.com/) or npm (https://www.npmjs.com/).
+- Basic knowledge of [Git](https://git-scm.com/) and GitHub Pages.
 
 ### Note: `npm` can be used instead of `yarn` for package management
 
@@ -147,6 +148,80 @@ For example `i18n/ja/new-page.json`:
 ```
 
    - The site will now be available in both English and Japanese.
+
+## Deploying Documentation Using GitHub Actions
+
+1. **Create a workflow**: Create a new file named `deploy.yml` in the `.github/workflows` directory.
+2. **Configure the workflow**: Add the following content to the `deploy.yml` file:
+
+```yaml
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-documentation:
+    runs-on: ubuntu-latest
+    name: Deploy Documentation to GitHub Pages
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: "./package.json"
+      - name: Install dependencies
+        run: yarn install
+      - name: Build website
+        run: yarn build
+      - name: Deploy Documentation to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          publish_dir: ./build
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+```
+
+#### 🚧Note: If you are using `npm`, replace `yarn` with `npm` in the workflow file. For example, `yarn install` becomes `npm install` and `yarn build` becomes `npm run build`.
+
+3. **Commit and push the changes**: Commit the changes and push them to the repository.
+4. **View the deployment**: View the deployment on GitHub Pages.
+
+### Setting Up GitHub Tokens
+
+1. **Create a Personal Access Token**:
+   - Go to GitHub and navigate to **Settings**.
+   - Select **Developer settings** from the sidebar.
+   - Click on **Personal access tokens**.
+   - Click on **Generate new token**.
+   - Give your token a descriptive name.
+   - Select the scopes `repo` and `workflow`.
+   - Click **Generate token**.
+   - Copy the token and save it securely. You will not be able to see it again.
+
+2. **Add the Token to Your Repository**:
+   - Go to your GitHub repository.
+   - Click on **Settings**.
+   - Select **Secrets and variables** from the sidebar, then click on **Actions**.
+   - Click on **New repository secret**.
+   - Name the secret `GH_ACTIONS_TOKEN`.
+   - Paste the personal access token you copied earlier.
+   - Click **Add secret**.
+
+### Workflow Details
+
+1. **Trigger the Workflow**: The workflow is triggered automatically on a push to the `main` branch or can be manually triggered.
+2. **Checkout the Repository**: The workflow uses the `actions/checkout@v3` action to checkout the repository.
+3. **Setup Node.js**: The workflow sets up Node.js version 18 using the `actions/setup-node@v3` action and caches dependencies using Yarn.
+4. **Install Dependencies**: The workflow installs the project dependencies using the `yarn install` command.
+5. **Build the Website**: The workflow builds the website using the `yarn build` command.
+6. **Deploy to GitHub Pages**: The workflow deploys the built documentation to GitHub Pages using the `peaceiris/actions-gh-pages@v3` action. It uses the GitHub token stored in the `GH_ACTIONS_TOKEN` secret to authenticate the deployment. The built files are published from the `./build` directory to the `gh-pages` branch.
 
 ## Conclusion
 
