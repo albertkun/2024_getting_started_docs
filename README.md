@@ -1,7 +1,3 @@
-Sure, here is the improved README without code blocks:
-
----
-
 # Docusaurus Workshop Guide
 
 This guide covers:
