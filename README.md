@@ -9,7 +9,7 @@ This guide covers:
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/) installed on your machine.
-- Basic knowledge of [Git](https://git-scm.com/) and [Yarn](https://yarnpkg.com/) or npm (https://www.npmjs.com/).
+- Basic knowledge of [Git](https://git-scm.com/) and GitHub Pages.
 
 ### Note: `npm` can be used instead of `yarn` for package management
 
@@ -187,7 +187,8 @@ jobs:
           user_email: 41898282+github-actions[bot]@users.noreply.github.com
 ```
 
-#### 🚧Note: If you are using `npm`, replace `yarn` with `npm` in the workflow file. For example, `yarn install` becomes `npm install` and `yarn build` becomes `npm run build`.
+#### 🚧Note
+If you are using `npm`, replace `yarn` with `npm` in the workflow file. For example, `yarn install` becomes `npm install` and `yarn build` becomes `npm run build`.
 
 3. **Commit and push the changes**: Commit the changes and push them to the repository.
 4. **View the deployment**: View the deployment on GitHub Pages.
